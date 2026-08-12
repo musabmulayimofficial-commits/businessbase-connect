@@ -12,12 +12,12 @@ export function FormField({
   children,
   className,
 }: {
-  label?: string;
-  htmlFor?: string;
-  error?: string;
-  hint?: string;
+  label?: string | undefined;
+  htmlFor?: string | undefined;
+  error?: string | undefined;
+  hint?: string | undefined;
   children: React.ReactNode;
-  className?: string;
+  className?: string | undefined;
 }) {
   return (
     <div className={cn("space-y-2", className)}>

@@ -168,11 +168,11 @@ export function MessagePreview({
   onClick,
 }: {
   name: string;
-  avatar?: string | null;
+  avatar?: string | null | undefined;
   lastMessage: string;
-  time?: string;
+  time?: string | undefined;
   unread: number;
-  active?: boolean;
+  active?: boolean | undefined;
   onClick: () => void;
 }) {
   return (

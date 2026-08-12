@@ -27,6 +27,7 @@ import { Route as AuthenticatedAnaPanelRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedAyarlarRouteImport } from './routes/_authenticated/ayarlar'
 import { Route as AuthenticatedBaglantilarimRouteImport } from './routes/_authenticated/baglantilarim'
 import { Route as AuthenticatedBildirimlerRouteImport } from './routes/_authenticated/bildirimler'
+import { Route as AuthenticatedMesajlarRouteImport } from './routes/_authenticated/mesajlar'
 import { Route as AuthenticatedProfilimRouteImport } from './routes/_authenticated/profilim'
 import { Route as ProfilIdRouteImport } from './routes/profil.$id'
 
@@ -121,6 +122,11 @@ const AuthenticatedBildirimlerRoute =
     path: '/bildirimler',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedMesajlarRoute = AuthenticatedMesajlarRouteImport.update({
+  id: '/mesajlar',
+  path: '/mesajlar',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedProfilimRoute = AuthenticatedProfilimRouteImport.update({
   id: '/profilim',
   path: '/profilim',
@@ -150,6 +156,7 @@ export interface FileRoutesByFullPath {
   '/ayarlar': typeof AuthenticatedAyarlarRoute
   '/baglantilarim': typeof AuthenticatedBaglantilarimRoute
   '/bildirimler': typeof AuthenticatedBildirimlerRoute
+  '/mesajlar': typeof AuthenticatedMesajlarRoute
   '/profilim': typeof AuthenticatedProfilimRoute
   '/profil/$id': typeof ProfilIdRoute
 }
@@ -171,6 +178,7 @@ export interface FileRoutesByTo {
   '/ayarlar': typeof AuthenticatedAyarlarRoute
   '/baglantilarim': typeof AuthenticatedBaglantilarimRoute
   '/bildirimler': typeof AuthenticatedBildirimlerRoute
+  '/mesajlar': typeof AuthenticatedMesajlarRoute
   '/profilim': typeof AuthenticatedProfilimRoute
   '/profil/$id': typeof ProfilIdRoute
 }
@@ -194,6 +202,7 @@ export interface FileRoutesById {
   '/_authenticated/ayarlar': typeof AuthenticatedAyarlarRoute
   '/_authenticated/baglantilarim': typeof AuthenticatedBaglantilarimRoute
   '/_authenticated/bildirimler': typeof AuthenticatedBildirimlerRoute
+  '/_authenticated/mesajlar': typeof AuthenticatedMesajlarRoute
   '/_authenticated/profilim': typeof AuthenticatedProfilimRoute
   '/profil/$id': typeof ProfilIdRoute
 }
@@ -217,6 +226,7 @@ export interface FileRouteTypes {
     | '/ayarlar'
     | '/baglantilarim'
     | '/bildirimler'
+    | '/mesajlar'
     | '/profilim'
     | '/profil/$id'
   fileRoutesByTo: FileRoutesByTo
@@ -238,6 +248,7 @@ export interface FileRouteTypes {
     | '/ayarlar'
     | '/baglantilarim'
     | '/bildirimler'
+    | '/mesajlar'
     | '/profilim'
     | '/profil/$id'
   id:
@@ -260,6 +271,7 @@ export interface FileRouteTypes {
     | '/_authenticated/ayarlar'
     | '/_authenticated/baglantilarim'
     | '/_authenticated/bildirimler'
+    | '/_authenticated/mesajlar'
     | '/_authenticated/profilim'
     | '/profil/$id'
   fileRoutesById: FileRoutesById
@@ -410,6 +422,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedBildirimlerRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/mesajlar': {
+      id: '/_authenticated/mesajlar'
+      path: '/mesajlar'
+      fullPath: '/mesajlar'
+      preLoaderRoute: typeof AuthenticatedMesajlarRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/profilim': {
       id: '/_authenticated/profilim'
       path: '/profilim'
@@ -432,6 +451,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAyarlarRoute: typeof AuthenticatedAyarlarRoute
   AuthenticatedBaglantilarimRoute: typeof AuthenticatedBaglantilarimRoute
   AuthenticatedBildirimlerRoute: typeof AuthenticatedBildirimlerRoute
+  AuthenticatedMesajlarRoute: typeof AuthenticatedMesajlarRoute
   AuthenticatedProfilimRoute: typeof AuthenticatedProfilimRoute
 }
 
@@ -440,6 +460,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAyarlarRoute: AuthenticatedAyarlarRoute,
   AuthenticatedBaglantilarimRoute: AuthenticatedBaglantilarimRoute,
   AuthenticatedBildirimlerRoute: AuthenticatedBildirimlerRoute,
+  AuthenticatedMesajlarRoute: AuthenticatedMesajlarRoute,
   AuthenticatedProfilimRoute: AuthenticatedProfilimRoute,
 }
 
