@@ -31,7 +31,7 @@ const schema = z.object({
   city: z.string().trim().min(1, "Şehir seç"),
   profession: z.string().trim().min(2, "Mesleğini yaz").max(120),
   entrepreneurship_status: z.string().trim().min(1, "Durumunu seç"),
-  motivation: z
+  reason: z
     .string()
     .trim()
     .min(30, "Lütfen en az 30 karakter yaz")
@@ -61,13 +61,17 @@ function Join() {
     }
     setErrors({});
     setLoading(true);
-    const { error } = await supabase.from("applications").insert(parsed.data);
-    setLoading(false);
-    if (error) {
+    try {
+      const result = await submit({ data: parsed.data });
+      if (result.duplicate) {
+        toast.info("Bu e-posta ile zaten bir başvurun var. Değerlendirme sürüyor.");
+      }
+      navigate({ to: "/basvuru-alindi" });
+    } catch {
       toast.error("Başvuru gönderilemedi. Lütfen tekrar dene.");
-      return;
+    } finally {
+      setLoading(false);
     }
-    navigate({ to: "/basvuru-alindi" });
   }
 
   return (
@@ -127,13 +131,13 @@ function Join() {
             </FormField>
             <FormField
               label="Neden BusinessBase?"
-              htmlFor="motivation"
-              error={errors.motivation}
+              htmlFor="reason"
+              error={errors.reason}
               hint="Ne yaptığını ve networkten ne beklediğini kısaca anlat."
             >
               <TextArea
-                id="motivation"
-                name="motivation"
+                id="reason"
+                name="reason"
                 maxLength={1000}
                 placeholder="Şu an üzerinde çalıştığım şey..."
               />
