@@ -76,3 +76,21 @@ export function useUnreadMessages() {
     },
   });
 }
+
+export function useIsAdmin() {
+  const { user } = useAuth();
+  return useQuery({
+    queryKey: ["is-admin", user?.id],
+    enabled: !!user,
+    staleTime: 60_000,
+    queryFn: async () => {
+      const { ensureAdminRole } = await import("@/lib/applications.functions");
+      try {
+        const result = await ensureAdminRole();
+        return result.isAdmin;
+      } catch {
+        return false;
+      }
+    },
+  });
+}
