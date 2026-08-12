@@ -10,6 +10,7 @@ import {
   Menu,
   MessageSquare,
   Settings,
+  ShieldCheck,
   User,
   Users,
   X,
@@ -17,7 +18,7 @@ import {
 import { Avatar } from "@/components/Avatar";
 import { GlassButton, GlassPanel } from "@/components/ui/glass";
 import { supabase } from "@/integrations/supabase/client";
-import { useMyProfile, useUnreadNotifications } from "@/lib/hooks";
+import { useIsAdmin, useMyProfile, useUnreadNotifications } from "@/lib/hooks";
 import { cn } from "@/lib/utils";
 
 const NAV = [
@@ -46,6 +47,7 @@ export function AppShell({
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const { data: profile } = useMyProfile();
   const unread = useUnreadNotifications();
+  const { data: isAdmin } = useIsAdmin();
   const [open, setOpen] = useState(false);
 
   async function signOut() {
@@ -102,6 +104,15 @@ export function AppShell({
             <p className="truncate text-xs text-muted-foreground">Profili düzenle</p>
           </div>
         </Link>
+        {isAdmin ? (
+          <Link
+            to="/admin"
+            onClick={() => setOpen(false)}
+            className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-muted-foreground transition-colors hover:bg-glass-2 hover:text-foreground"
+          >
+            <ShieldCheck className="size-4" aria-hidden /> Yönetici Paneli
+          </Link>
+        ) : null}
         <Link
           to="/ayarlar"
           onClick={() => setOpen(false)}
