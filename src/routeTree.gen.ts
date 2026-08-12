@@ -10,33 +10,288 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as BasvuruAlindiRouteImport } from './routes/basvuru-alindi'
+import { Route as EtkinliklerRouteImport } from './routes/etkinlikler'
+import { Route as FirsatlarRouteImport } from './routes/firsatlar'
+import { Route as GirisYapRouteImport } from './routes/giris-yap'
+import { Route as GizlilikPolitikasiRouteImport } from './routes/gizlilik-politikasi'
+import { Route as HakkimizdaRouteImport } from './routes/hakkimizda'
+import { Route as KayitOlRouteImport } from './routes/kayit-ol'
+import { Route as NetworkRouteImport } from './routes/network'
+import { Route as NetworkeKatilRouteImport } from './routes/networke-katil'
+import { Route as SifreSifirlaRouteImport } from './routes/sifre-sifirla'
+import { Route as SifremiUnuttumRouteImport } from './routes/sifremi-unuttum'
+import { Route as ToplulukKurallariRouteImport } from './routes/topluluk-kurallari'
+import { Route as AuthenticatedAnaPanelRouteImport } from './routes/_authenticated/ana-panel'
+import { Route as AuthenticatedAyarlarRouteImport } from './routes/_authenticated/ayarlar'
+import { Route as AuthenticatedBaglantilarimRouteImport } from './routes/_authenticated/baglantilarim'
+import { Route as AuthenticatedBildirimlerRouteImport } from './routes/_authenticated/bildirimler'
+import { Route as AuthenticatedMesajlarRouteImport } from './routes/_authenticated/mesajlar'
+import { Route as AuthenticatedProfilimRouteImport } from './routes/_authenticated/profilim'
+import { Route as ProfilIdRouteImport } from './routes/profil.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BasvuruAlindiRoute = BasvuruAlindiRouteImport.update({
+  id: '/basvuru-alindi',
+  path: '/basvuru-alindi',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EtkinliklerRoute = EtkinliklerRouteImport.update({
+  id: '/etkinlikler',
+  path: '/etkinlikler',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FirsatlarRoute = FirsatlarRouteImport.update({
+  id: '/firsatlar',
+  path: '/firsatlar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GirisYapRoute = GirisYapRouteImport.update({
+  id: '/giris-yap',
+  path: '/giris-yap',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GizlilikPolitikasiRoute = GizlilikPolitikasiRouteImport.update({
+  id: '/gizlilik-politikasi',
+  path: '/gizlilik-politikasi',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HakkimizdaRoute = HakkimizdaRouteImport.update({
+  id: '/hakkimizda',
+  path: '/hakkimizda',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KayitOlRoute = KayitOlRouteImport.update({
+  id: '/kayit-ol',
+  path: '/kayit-ol',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NetworkRoute = NetworkRouteImport.update({
+  id: '/network',
+  path: '/network',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NetworkeKatilRoute = NetworkeKatilRouteImport.update({
+  id: '/networke-katil',
+  path: '/networke-katil',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SifreSifirlaRoute = SifreSifirlaRouteImport.update({
+  id: '/sifre-sifirla',
+  path: '/sifre-sifirla',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SifremiUnuttumRoute = SifremiUnuttumRouteImport.update({
+  id: '/sifremi-unuttum',
+  path: '/sifremi-unuttum',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ToplulukKurallariRoute = ToplulukKurallariRouteImport.update({
+  id: '/topluluk-kurallari',
+  path: '/topluluk-kurallari',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedAnaPanelRoute = AuthenticatedAnaPanelRouteImport.update({
+  id: '/ana-panel',
+  path: '/ana-panel',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedAyarlarRoute = AuthenticatedAyarlarRouteImport.update({
+  id: '/ayarlar',
+  path: '/ayarlar',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedBaglantilarimRoute =
+  AuthenticatedBaglantilarimRouteImport.update({
+    id: '/baglantilarim',
+    path: '/baglantilarim',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedBildirimlerRoute =
+  AuthenticatedBildirimlerRouteImport.update({
+    id: '/bildirimler',
+    path: '/bildirimler',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedMesajlarRoute = AuthenticatedMesajlarRouteImport.update({
+  id: '/mesajlar',
+  path: '/mesajlar',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedProfilimRoute = AuthenticatedProfilimRouteImport.update({
+  id: '/profilim',
+  path: '/profilim',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const ProfilIdRoute = ProfilIdRouteImport.update({
+  id: '/profil/$id',
+  path: '/profil/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/basvuru-alindi': typeof BasvuruAlindiRoute
+  '/etkinlikler': typeof EtkinliklerRoute
+  '/firsatlar': typeof FirsatlarRoute
+  '/giris-yap': typeof GirisYapRoute
+  '/gizlilik-politikasi': typeof GizlilikPolitikasiRoute
+  '/hakkimizda': typeof HakkimizdaRoute
+  '/kayit-ol': typeof KayitOlRoute
+  '/network': typeof NetworkRoute
+  '/networke-katil': typeof NetworkeKatilRoute
+  '/sifre-sifirla': typeof SifreSifirlaRoute
+  '/sifremi-unuttum': typeof SifremiUnuttumRoute
+  '/topluluk-kurallari': typeof ToplulukKurallariRoute
+  '/ana-panel': typeof AuthenticatedAnaPanelRoute
+  '/ayarlar': typeof AuthenticatedAyarlarRoute
+  '/baglantilarim': typeof AuthenticatedBaglantilarimRoute
+  '/bildirimler': typeof AuthenticatedBildirimlerRoute
+  '/mesajlar': typeof AuthenticatedMesajlarRoute
+  '/profilim': typeof AuthenticatedProfilimRoute
+  '/profil/$id': typeof ProfilIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/basvuru-alindi': typeof BasvuruAlindiRoute
+  '/etkinlikler': typeof EtkinliklerRoute
+  '/firsatlar': typeof FirsatlarRoute
+  '/giris-yap': typeof GirisYapRoute
+  '/gizlilik-politikasi': typeof GizlilikPolitikasiRoute
+  '/hakkimizda': typeof HakkimizdaRoute
+  '/kayit-ol': typeof KayitOlRoute
+  '/network': typeof NetworkRoute
+  '/networke-katil': typeof NetworkeKatilRoute
+  '/sifre-sifirla': typeof SifreSifirlaRoute
+  '/sifremi-unuttum': typeof SifremiUnuttumRoute
+  '/topluluk-kurallari': typeof ToplulukKurallariRoute
+  '/ana-panel': typeof AuthenticatedAnaPanelRoute
+  '/ayarlar': typeof AuthenticatedAyarlarRoute
+  '/baglantilarim': typeof AuthenticatedBaglantilarimRoute
+  '/bildirimler': typeof AuthenticatedBildirimlerRoute
+  '/mesajlar': typeof AuthenticatedMesajlarRoute
+  '/profilim': typeof AuthenticatedProfilimRoute
+  '/profil/$id': typeof ProfilIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/basvuru-alindi': typeof BasvuruAlindiRoute
+  '/etkinlikler': typeof EtkinliklerRoute
+  '/firsatlar': typeof FirsatlarRoute
+  '/giris-yap': typeof GirisYapRoute
+  '/gizlilik-politikasi': typeof GizlilikPolitikasiRoute
+  '/hakkimizda': typeof HakkimizdaRoute
+  '/kayit-ol': typeof KayitOlRoute
+  '/network': typeof NetworkRoute
+  '/networke-katil': typeof NetworkeKatilRoute
+  '/sifre-sifirla': typeof SifreSifirlaRoute
+  '/sifremi-unuttum': typeof SifremiUnuttumRoute
+  '/topluluk-kurallari': typeof ToplulukKurallariRoute
+  '/_authenticated/ana-panel': typeof AuthenticatedAnaPanelRoute
+  '/_authenticated/ayarlar': typeof AuthenticatedAyarlarRoute
+  '/_authenticated/baglantilarim': typeof AuthenticatedBaglantilarimRoute
+  '/_authenticated/bildirimler': typeof AuthenticatedBildirimlerRoute
+  '/_authenticated/mesajlar': typeof AuthenticatedMesajlarRoute
+  '/_authenticated/profilim': typeof AuthenticatedProfilimRoute
+  '/profil/$id': typeof ProfilIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/basvuru-alindi'
+    | '/etkinlikler'
+    | '/firsatlar'
+    | '/giris-yap'
+    | '/gizlilik-politikasi'
+    | '/hakkimizda'
+    | '/kayit-ol'
+    | '/network'
+    | '/networke-katil'
+    | '/sifre-sifirla'
+    | '/sifremi-unuttum'
+    | '/topluluk-kurallari'
+    | '/ana-panel'
+    | '/ayarlar'
+    | '/baglantilarim'
+    | '/bildirimler'
+    | '/mesajlar'
+    | '/profilim'
+    | '/profil/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/basvuru-alindi'
+    | '/etkinlikler'
+    | '/firsatlar'
+    | '/giris-yap'
+    | '/gizlilik-politikasi'
+    | '/hakkimizda'
+    | '/kayit-ol'
+    | '/network'
+    | '/networke-katil'
+    | '/sifre-sifirla'
+    | '/sifremi-unuttum'
+    | '/topluluk-kurallari'
+    | '/ana-panel'
+    | '/ayarlar'
+    | '/baglantilarim'
+    | '/bildirimler'
+    | '/mesajlar'
+    | '/profilim'
+    | '/profil/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/basvuru-alindi'
+    | '/etkinlikler'
+    | '/firsatlar'
+    | '/giris-yap'
+    | '/gizlilik-politikasi'
+    | '/hakkimizda'
+    | '/kayit-ol'
+    | '/network'
+    | '/networke-katil'
+    | '/sifre-sifirla'
+    | '/sifremi-unuttum'
+    | '/topluluk-kurallari'
+    | '/_authenticated/ana-panel'
+    | '/_authenticated/ayarlar'
+    | '/_authenticated/baglantilarim'
+    | '/_authenticated/bildirimler'
+    | '/_authenticated/mesajlar'
+    | '/_authenticated/profilim'
+    | '/profil/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  BasvuruAlindiRoute: typeof BasvuruAlindiRoute
+  EtkinliklerRoute: typeof EtkinliklerRoute
+  FirsatlarRoute: typeof FirsatlarRoute
+  GirisYapRoute: typeof GirisYapRoute
+  GizlilikPolitikasiRoute: typeof GizlilikPolitikasiRoute
+  HakkimizdaRoute: typeof HakkimizdaRoute
+  KayitOlRoute: typeof KayitOlRoute
+  NetworkRoute: typeof NetworkRoute
+  NetworkeKatilRoute: typeof NetworkeKatilRoute
+  SifreSifirlaRoute: typeof SifreSifirlaRoute
+  SifremiUnuttumRoute: typeof SifremiUnuttumRoute
+  ToplulukKurallariRoute: typeof ToplulukKurallariRoute
+  ProfilIdRoute: typeof ProfilIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +303,186 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/basvuru-alindi': {
+      id: '/basvuru-alindi'
+      path: '/basvuru-alindi'
+      fullPath: '/basvuru-alindi'
+      preLoaderRoute: typeof BasvuruAlindiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/etkinlikler': {
+      id: '/etkinlikler'
+      path: '/etkinlikler'
+      fullPath: '/etkinlikler'
+      preLoaderRoute: typeof EtkinliklerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/firsatlar': {
+      id: '/firsatlar'
+      path: '/firsatlar'
+      fullPath: '/firsatlar'
+      preLoaderRoute: typeof FirsatlarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/giris-yap': {
+      id: '/giris-yap'
+      path: '/giris-yap'
+      fullPath: '/giris-yap'
+      preLoaderRoute: typeof GirisYapRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/gizlilik-politikasi': {
+      id: '/gizlilik-politikasi'
+      path: '/gizlilik-politikasi'
+      fullPath: '/gizlilik-politikasi'
+      preLoaderRoute: typeof GizlilikPolitikasiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/hakkimizda': {
+      id: '/hakkimizda'
+      path: '/hakkimizda'
+      fullPath: '/hakkimizda'
+      preLoaderRoute: typeof HakkimizdaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/kayit-ol': {
+      id: '/kayit-ol'
+      path: '/kayit-ol'
+      fullPath: '/kayit-ol'
+      preLoaderRoute: typeof KayitOlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/network': {
+      id: '/network'
+      path: '/network'
+      fullPath: '/network'
+      preLoaderRoute: typeof NetworkRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/networke-katil': {
+      id: '/networke-katil'
+      path: '/networke-katil'
+      fullPath: '/networke-katil'
+      preLoaderRoute: typeof NetworkeKatilRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sifre-sifirla': {
+      id: '/sifre-sifirla'
+      path: '/sifre-sifirla'
+      fullPath: '/sifre-sifirla'
+      preLoaderRoute: typeof SifreSifirlaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sifremi-unuttum': {
+      id: '/sifremi-unuttum'
+      path: '/sifremi-unuttum'
+      fullPath: '/sifremi-unuttum'
+      preLoaderRoute: typeof SifremiUnuttumRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/topluluk-kurallari': {
+      id: '/topluluk-kurallari'
+      path: '/topluluk-kurallari'
+      fullPath: '/topluluk-kurallari'
+      preLoaderRoute: typeof ToplulukKurallariRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/ana-panel': {
+      id: '/_authenticated/ana-panel'
+      path: '/ana-panel'
+      fullPath: '/ana-panel'
+      preLoaderRoute: typeof AuthenticatedAnaPanelRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/ayarlar': {
+      id: '/_authenticated/ayarlar'
+      path: '/ayarlar'
+      fullPath: '/ayarlar'
+      preLoaderRoute: typeof AuthenticatedAyarlarRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/baglantilarim': {
+      id: '/_authenticated/baglantilarim'
+      path: '/baglantilarim'
+      fullPath: '/baglantilarim'
+      preLoaderRoute: typeof AuthenticatedBaglantilarimRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/bildirimler': {
+      id: '/_authenticated/bildirimler'
+      path: '/bildirimler'
+      fullPath: '/bildirimler'
+      preLoaderRoute: typeof AuthenticatedBildirimlerRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/mesajlar': {
+      id: '/_authenticated/mesajlar'
+      path: '/mesajlar'
+      fullPath: '/mesajlar'
+      preLoaderRoute: typeof AuthenticatedMesajlarRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/profilim': {
+      id: '/_authenticated/profilim'
+      path: '/profilim'
+      fullPath: '/profilim'
+      preLoaderRoute: typeof AuthenticatedProfilimRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/profil/$id': {
+      id: '/profil/$id'
+      path: '/profil/$id'
+      fullPath: '/profil/$id'
+      preLoaderRoute: typeof ProfilIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAnaPanelRoute: typeof AuthenticatedAnaPanelRoute
+  AuthenticatedAyarlarRoute: typeof AuthenticatedAyarlarRoute
+  AuthenticatedBaglantilarimRoute: typeof AuthenticatedBaglantilarimRoute
+  AuthenticatedBildirimlerRoute: typeof AuthenticatedBildirimlerRoute
+  AuthenticatedMesajlarRoute: typeof AuthenticatedMesajlarRoute
+  AuthenticatedProfilimRoute: typeof AuthenticatedProfilimRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAnaPanelRoute: AuthenticatedAnaPanelRoute,
+  AuthenticatedAyarlarRoute: AuthenticatedAyarlarRoute,
+  AuthenticatedBaglantilarimRoute: AuthenticatedBaglantilarimRoute,
+  AuthenticatedBildirimlerRoute: AuthenticatedBildirimlerRoute,
+  AuthenticatedMesajlarRoute: AuthenticatedMesajlarRoute,
+  AuthenticatedProfilimRoute: AuthenticatedProfilimRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  BasvuruAlindiRoute: BasvuruAlindiRoute,
+  EtkinliklerRoute: EtkinliklerRoute,
+  FirsatlarRoute: FirsatlarRoute,
+  GirisYapRoute: GirisYapRoute,
+  GizlilikPolitikasiRoute: GizlilikPolitikasiRoute,
+  HakkimizdaRoute: HakkimizdaRoute,
+  KayitOlRoute: KayitOlRoute,
+  NetworkRoute: NetworkRoute,
+  NetworkeKatilRoute: NetworkeKatilRoute,
+  SifreSifirlaRoute: SifreSifirlaRoute,
+  SifremiUnuttumRoute: SifremiUnuttumRoute,
+  ToplulukKurallariRoute: ToplulukKurallariRoute,
+  ProfilIdRoute: ProfilIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
