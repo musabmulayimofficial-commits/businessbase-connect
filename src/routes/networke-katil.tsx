@@ -6,7 +6,8 @@ import { PublicLayout } from "@/components/PublicLayout";
 import { GlassButton, GlassPanel } from "@/components/ui/glass";
 import { FormField, SelectInput, TextArea, TextInput } from "@/components/ui/form-field";
 import { CITIES, ENTREPRENEURSHIP_STATUSES } from "@/lib/constants";
-import { supabase } from "@/integrations/supabase/client";
+import { useServerFn } from "@tanstack/react-start";
+import { submitApplication } from "@/lib/applications.functions";
 
 export const Route = createFileRoute("/networke-katil")({
   head: () => ({
@@ -42,6 +43,7 @@ type Errors = Partial<Record<keyof z.infer<typeof schema>, string>>;
 
 function Join() {
   const navigate = useNavigate();
+  const submit = useServerFn(submitApplication);
   const [errors, setErrors] = useState<Errors>({});
   const [loading, setLoading] = useState(false);
 
