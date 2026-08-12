@@ -14,42 +14,104 @@ export type Database = {
   }
   public: {
     Tables: {
+      application_events: {
+        Row: {
+          actor: string
+          actor_id: string | null
+          application_id: string
+          created_at: string
+          decision: string
+          id: string
+          reason: string
+          score: number | null
+        }
+        Insert: {
+          actor?: string
+          actor_id?: string | null
+          application_id: string
+          created_at?: string
+          decision: string
+          id?: string
+          reason?: string
+          score?: number | null
+        }
+        Update: {
+          actor?: string
+          actor_id?: string | null
+          application_id?: string
+          created_at?: string
+          decision?: string
+          id?: string
+          reason?: string
+          score?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "application_events_application_id_fkey"
+            columns: ["application_id"]
+            isOneToOne: false
+            referencedRelation: "applications"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       applications: {
         Row: {
+          ai_decision: string | null
+          ai_reason: string | null
+          ai_score: number | null
           city: string
           created_at: string
           email: string
           entrepreneurship_status: string
           full_name: string
           id: string
-          motivation: string
           phone: string
           profession: string
+          reason: string
+          reviewed_at: string | null
+          reviewed_by: string | null
           status: string
+          updated_at: string
+          user_id: string | null
         }
         Insert: {
+          ai_decision?: string | null
+          ai_reason?: string | null
+          ai_score?: number | null
           city: string
           created_at?: string
           email: string
           entrepreneurship_status: string
           full_name: string
           id?: string
-          motivation: string
           phone: string
           profession: string
+          reason: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
           status?: string
+          updated_at?: string
+          user_id?: string | null
         }
         Update: {
+          ai_decision?: string | null
+          ai_reason?: string | null
+          ai_score?: number | null
           city?: string
           created_at?: string
           email?: string
           entrepreneurship_status?: string
           full_name?: string
           id?: string
-          motivation?: string
           phone?: string
           profession?: string
+          reason?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
           status?: string
+          updated_at?: string
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -441,18 +503,46 @@ export type Database = {
         }
         Relationships: []
       }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
       is_conversation_member: {
         Args: { _conversation_id: string; _user_id: string }
         Returns: boolean
       }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "moderator" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -579,6 +669,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "moderator", "user"],
+    },
   },
 } as const
