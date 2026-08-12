@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
+import { ensureAdminRole } from "@/lib/applications.functions";
 import type { Profile } from "@/lib/types";
 
 export function useMyProfile() {
@@ -73,6 +74,23 @@ export function useUnreadMessages() {
         .neq("sender_id", user!.id);
       if (error) throw error;
       return count ?? 0;
+    },
+  });
+}
+
+export function useIsAdmin() {
+  const { user } = useAuth();
+  return useQuery({
+    queryKey: ["is-admin", user?.id],
+    enabled: !!user,
+    staleTime: 60_000,
+    queryFn: async () => {
+      try {
+        const result = await ensureAdminRole();
+        return result.isAdmin;
+      } catch {
+        return false;
+      }
     },
   });
 }

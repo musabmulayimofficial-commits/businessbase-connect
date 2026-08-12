@@ -6,7 +6,8 @@ import { PublicLayout } from "@/components/PublicLayout";
 import { GlassButton, GlassPanel } from "@/components/ui/glass";
 import { FormField, SelectInput, TextArea, TextInput } from "@/components/ui/form-field";
 import { CITIES, ENTREPRENEURSHIP_STATUSES } from "@/lib/constants";
-import { supabase } from "@/integrations/supabase/client";
+import { useServerFn } from "@tanstack/react-start";
+import { submitApplication } from "@/lib/applications.functions";
 
 export const Route = createFileRoute("/networke-katil")({
   head: () => ({
@@ -31,7 +32,7 @@ const schema = z.object({
   city: z.string().trim().min(1, "Şehir seç"),
   profession: z.string().trim().min(2, "Mesleğini yaz").max(120),
   entrepreneurship_status: z.string().trim().min(1, "Durumunu seç"),
-  motivation: z
+  reason: z
     .string()
     .trim()
     .min(30, "Lütfen en az 30 karakter yaz")
@@ -42,6 +43,7 @@ type Errors = Partial<Record<keyof z.infer<typeof schema>, string>>;
 
 function Join() {
   const navigate = useNavigate();
+  const submit = useServerFn(submitApplication);
   const [errors, setErrors] = useState<Errors>({});
   const [loading, setLoading] = useState(false);
 
@@ -61,13 +63,17 @@ function Join() {
     }
     setErrors({});
     setLoading(true);
-    const { error } = await supabase.from("applications").insert(parsed.data);
-    setLoading(false);
-    if (error) {
+    try {
+      const result = await submit({ data: parsed.data });
+      if (result.duplicate) {
+        toast.info("Bu e-posta ile zaten bir başvurun var. Değerlendirme sürüyor.");
+      }
+      navigate({ to: "/basvuru-alindi" });
+    } catch {
       toast.error("Başvuru gönderilemedi. Lütfen tekrar dene.");
-      return;
+    } finally {
+      setLoading(false);
     }
-    navigate({ to: "/basvuru-alindi" });
   }
 
   return (
@@ -127,13 +133,13 @@ function Join() {
             </FormField>
             <FormField
               label="Neden BusinessBase?"
-              htmlFor="motivation"
-              error={errors.motivation}
+              htmlFor="reason"
+              error={errors.reason}
               hint="Ne yaptığını ve networkten ne beklediğini kısaca anlat."
             >
               <TextArea
-                id="motivation"
-                name="motivation"
+                id="reason"
+                name="reason"
                 maxLength={1000}
                 placeholder="Şu an üzerinde çalıştığım şey..."
               />

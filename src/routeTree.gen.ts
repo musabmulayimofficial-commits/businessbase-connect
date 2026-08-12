@@ -23,6 +23,7 @@ import { Route as NetworkeKatilRouteImport } from './routes/networke-katil'
 import { Route as SifreSifirlaRouteImport } from './routes/sifre-sifirla'
 import { Route as SifremiUnuttumRouteImport } from './routes/sifremi-unuttum'
 import { Route as ToplulukKurallariRouteImport } from './routes/topluluk-kurallari'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedAnaPanelRouteImport } from './routes/_authenticated/ana-panel'
 import { Route as AuthenticatedAyarlarRouteImport } from './routes/_authenticated/ayarlar'
 import { Route as AuthenticatedBaglantilarimRouteImport } from './routes/_authenticated/baglantilarim'
@@ -100,6 +101,11 @@ const ToplulukKurallariRoute = ToplulukKurallariRouteImport.update({
   path: '/topluluk-kurallari',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedAnaPanelRoute = AuthenticatedAnaPanelRouteImport.update({
   id: '/ana-panel',
   path: '/ana-panel',
@@ -152,6 +158,7 @@ export interface FileRoutesByFullPath {
   '/sifre-sifirla': typeof SifreSifirlaRoute
   '/sifremi-unuttum': typeof SifremiUnuttumRoute
   '/topluluk-kurallari': typeof ToplulukKurallariRoute
+  '/admin': typeof AuthenticatedAdminRoute
   '/ana-panel': typeof AuthenticatedAnaPanelRoute
   '/ayarlar': typeof AuthenticatedAyarlarRoute
   '/baglantilarim': typeof AuthenticatedBaglantilarimRoute
@@ -174,6 +181,7 @@ export interface FileRoutesByTo {
   '/sifre-sifirla': typeof SifreSifirlaRoute
   '/sifremi-unuttum': typeof SifremiUnuttumRoute
   '/topluluk-kurallari': typeof ToplulukKurallariRoute
+  '/admin': typeof AuthenticatedAdminRoute
   '/ana-panel': typeof AuthenticatedAnaPanelRoute
   '/ayarlar': typeof AuthenticatedAyarlarRoute
   '/baglantilarim': typeof AuthenticatedBaglantilarimRoute
@@ -198,6 +206,7 @@ export interface FileRoutesById {
   '/sifre-sifirla': typeof SifreSifirlaRoute
   '/sifremi-unuttum': typeof SifremiUnuttumRoute
   '/topluluk-kurallari': typeof ToplulukKurallariRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/ana-panel': typeof AuthenticatedAnaPanelRoute
   '/_authenticated/ayarlar': typeof AuthenticatedAyarlarRoute
   '/_authenticated/baglantilarim': typeof AuthenticatedBaglantilarimRoute
@@ -222,6 +231,7 @@ export interface FileRouteTypes {
     | '/sifre-sifirla'
     | '/sifremi-unuttum'
     | '/topluluk-kurallari'
+    | '/admin'
     | '/ana-panel'
     | '/ayarlar'
     | '/baglantilarim'
@@ -244,6 +254,7 @@ export interface FileRouteTypes {
     | '/sifre-sifirla'
     | '/sifremi-unuttum'
     | '/topluluk-kurallari'
+    | '/admin'
     | '/ana-panel'
     | '/ayarlar'
     | '/baglantilarim'
@@ -267,6 +278,7 @@ export interface FileRouteTypes {
     | '/sifre-sifirla'
     | '/sifremi-unuttum'
     | '/topluluk-kurallari'
+    | '/_authenticated/admin'
     | '/_authenticated/ana-panel'
     | '/_authenticated/ayarlar'
     | '/_authenticated/baglantilarim'
@@ -394,6 +406,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ToplulukKurallariRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/ana-panel': {
       id: '/_authenticated/ana-panel'
       path: '/ana-panel'
@@ -447,6 +466,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
   AuthenticatedAnaPanelRoute: typeof AuthenticatedAnaPanelRoute
   AuthenticatedAyarlarRoute: typeof AuthenticatedAyarlarRoute
   AuthenticatedBaglantilarimRoute: typeof AuthenticatedBaglantilarimRoute
@@ -456,6 +476,7 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminRoute: AuthenticatedAdminRoute,
   AuthenticatedAnaPanelRoute: AuthenticatedAnaPanelRoute,
   AuthenticatedAyarlarRoute: AuthenticatedAyarlarRoute,
   AuthenticatedBaglantilarimRoute: AuthenticatedBaglantilarimRoute,
