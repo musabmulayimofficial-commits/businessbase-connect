@@ -1,7 +1,10 @@
 import { createServerFn } from "@tanstack/react-start";
-import { getRequest } from "@tanstack/react-start/server";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+
+/* =========================================================
+   BAŞVURU ŞEMASI
+   ========================================================= */
 
 const applicationSchema = z.object({
   full_name: z.string().trim().min(3).max(100),
@@ -9,9 +12,17 @@ const applicationSchema = z.object({
   phone: z.string().trim().min(10).max(20),
   city: z.string().trim().min(1).max(60),
   profession: z.string().trim().min(2).max(120),
-  entrepreneurship_status: z.string().trim().min(1).max(60),
+  entrepreneurship_status: z
+    .string()
+    .trim()
+    .min(1)
+    .max(60),
   reason: z.string().trim().min(30).max(1000),
 });
+
+/* =========================================================
+   ADMİN KARAR ŞEMASI
+   ========================================================= */
 
 const decisionSchema = z.object({
   id: z.string().uuid(),
@@ -19,42 +30,56 @@ const decisionSchema = z.object({
   note: z.string().trim().max(500).optional(),
 });
 
-/**
- * Yeni başvuru oluşturur.
- *
- * Başvuru Supabase'e kaydedilir.
- * Başlangıç durumu: pending
- *
- * Kayıttan sonra ADMIN_EMAIL adresine
- * "Başvuruyu İncele" butonlu bildirim maili gönderilir.
- */
-export const submitApplication = createServerFn({ method: "POST" })
-  .inputValidator((data: unknown) => applicationSchema.parse(data))
+/* =========================================================
+   YENİ BAŞVURU
+   ========================================================= */
+
+export const submitApplication = createServerFn({
+  method: "POST",
+})
+  .inputValidator((data: unknown) =>
+    applicationSchema.parse(data)
+  )
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import(
       "@/integrations/supabase/client.server"
     );
 
-    // Aynı e-posta ile aktif başvuru kontrolü
-    const { data: existing, error: existingError } = await supabaseAdmin
+    /* ---------------------------------------------
+       Aynı e-posta ile mevcut başvuru kontrolü
+       --------------------------------------------- */
+
+    const {
+      data: existing,
+      error: existingError,
+    } = await supabaseAdmin
       .from("applications")
       .select("id, status, created_at")
       .ilike("email", data.email)
-      .order("created_at", { ascending: false })
+      .order("created_at", {
+        ascending: false,
+      })
       .limit(1)
       .maybeSingle();
 
     if (existingError) {
       console.error(
         "[application] mevcut başvuru kontrolü:",
-        existingError,
+        existingError
       );
     }
 
-    // Daha önce aktif bir başvuru varsa tekrar oluşturma
+    /* ---------------------------------------------
+       Daha önce aktif başvuru varsa tekrar oluşturma
+       --------------------------------------------- */
+
     if (
       existing &&
-      ["pending", "approved", "manual_review"].includes(existing.status)
+      [
+        "pending",
+        "approved",
+        "manual_review",
+      ].includes(existing.status)
     ) {
       return {
         ok: true,
@@ -63,8 +88,14 @@ export const submitApplication = createServerFn({ method: "POST" })
       } as const;
     }
 
-    // Başvuruyu kaydet
-    const { data: application, error } = await supabaseAdmin
+    /* ---------------------------------------------
+       Yeni başvuru oluştur
+       --------------------------------------------- */
+
+    const {
+      data: application,
+      error,
+    } = await supabaseAdmin
       .from("applications")
       .insert({
         full_name: data.full_name,
@@ -72,7 +103,8 @@ export const submitApplication = createServerFn({ method: "POST" })
         phone: data.phone,
         city: data.city,
         profession: data.profession,
-        entrepreneurship_status: data.entrepreneurship_status,
+        entrepreneurship_status:
+          data.entrepreneurship_status,
         reason: data.reason,
         status: "pending",
       })
@@ -80,62 +112,20 @@ export const submitApplication = createServerFn({ method: "POST" })
       .single();
 
     if (error || !application) {
-      console.error("[application] kayıt hatası:", error);
-      throw new Error("Başvuru kaydedilemedi");
+      console.error(
+        "[application] kayıt hatası:",
+        error
+      );
+
+      throw new Error(
+        "Başvuru kaydedilemedi."
+      );
     }
 
     console.log(
-      "[application] yeni başvuru oluşturuldu:",
-      application.id,
+      "[application] yeni başvuru:",
+      application.id
     );
-
-    // ---------------------------------------------------------
-    // YÖNETİCİYE BAŞVURU BİLDİRİM MAİLİ
-    // ---------------------------------------------------------
-
-    try {
-      const adminEmail = process.env["ADMIN_EMAIL"];
-
-      if (!adminEmail) {
-        console.warn(
-          "[email] ADMIN_EMAIL tanımlı değil.",
-        );
-      } else {
-        const request = getRequest();
-
-        const origin =
-          request?.headers.get("origin") ??
-          (request?.url
-            ? new URL(request.url).origin
-            : "https://businessbase-connect.vercel.app");
-
-        const adminUrl = `${origin}/admin`;
-
-        const server = await import("./applications.server");
-
-        await server.safeSend(
-          application.id,
-          "admin_new_application",
-          () =>
-            server.emails.adminNewApplicationEmail(
-              adminEmail,
-              application,
-              adminUrl,
-            ),
-        );
-
-        console.log(
-          "[email] yönetici bildirim maili gönderildi:",
-          adminEmail,
-        );
-      }
-    } catch (error) {
-      // Mail hatası başvurunun kaydedilmesini engellemez.
-      console.error(
-        "[email] yönetici bildirim maili gönderilemedi:",
-        error,
-      );
-    }
 
     return {
       ok: true,
@@ -145,12 +135,17 @@ export const submitApplication = createServerFn({ method: "POST" })
     } as const;
   });
 
-/**
- * Giriş yapan kullanıcının admin olup olmadığını kontrol eder.
- *
- * ADMIN_EMAIL ile eşleşen ve e-postası doğrulanmış kullanıcı admin kabul edilir.
- */
-export const ensureAdminRole = createServerFn({ method: "POST" })
+/* =========================================================
+   ADMİN KONTROLÜ
+   =========================================================
+   
+   ADMIN_EMAIL ile giriş yapan kullanıcı admin kabul edilir.
+   user_roles / has_role kullanılmaz.
+   ========================================================= */
+
+export const ensureAdminRole = createServerFn({
+  method: "POST",
+})
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const adminEmail = process.env["ADMIN_EMAIL"]
@@ -161,45 +156,14 @@ export const ensureAdminRole = createServerFn({ method: "POST" })
       email?: string;
     };
 
-    const email = claims.email
+    const loggedInEmail = claims.email
       ?.trim()
       .toLowerCase();
 
-    if (!adminEmail || !email || email !== adminEmail) {
-      return {
-        isAdmin: false,
-      } as const;
-    }
-
-    const { supabaseAdmin } = await import(
-      "@/integrations/supabase/client.server"
-    );
-
-    const { data: authUser, error: authUserError } =
-      await supabaseAdmin.auth.admin.getUserById(
-        context.userId,
-      );
-
-    if (authUserError || !authUser?.user) {
-      console.error(
-        "[admin] kullanıcı kontrolü başarısız:",
-        authUserError,
-      );
-
-      return {
-        isAdmin: false,
-      } as const;
-    }
-
-    if (!authUser.user.email_confirmed_at) {
-      return {
-        isAdmin: false,
-      } as const;
-    }
-
     if (
-      authUser.user.email?.trim().toLowerCase() !==
-      adminEmail
+      !adminEmail ||
+      !loggedInEmail ||
+      loggedInEmail !== adminEmail
     ) {
       return {
         isAdmin: false,
@@ -211,35 +175,25 @@ export const ensureAdminRole = createServerFn({ method: "POST" })
     } as const;
   });
 
-/**
- * Admin başvuruyu onaylar veya reddeder.
- *
- * Admin kontrolü:
- * - Kullanıcı giriş yapmış olmalı.
- * - Kullanıcı e-postası ADMIN_EMAIL ile eşleşmeli.
- * - E-posta doğrulanmış olmalı.
- */
+/* =========================================================
+   ADMİN BAŞVURU ONAY / RED
+   ========================================================= */
+
 export const adminDecideApplication = createServerFn({
   method: "POST",
 })
   .middleware([requireSupabaseAuth])
   .inputValidator((data: unknown) =>
-    decisionSchema.parse(data),
+    decisionSchema.parse(data)
   )
   .handler(async ({ data, context }) => {
+    /* ---------------------------------------------
+       ADMIN_EMAIL kontrolü
+       --------------------------------------------- */
+
     const adminEmail = process.env["ADMIN_EMAIL"]
       ?.trim()
       .toLowerCase();
-
-    if (!adminEmail) {
-      console.error(
-        "[admin] ADMIN_EMAIL tanımlı değil",
-      );
-
-      throw new Error(
-        "ADMIN_EMAIL yapılandırılmamış",
-      );
-    }
 
     const claims = context.claims as {
       email?: string;
@@ -250,52 +204,67 @@ export const adminDecideApplication = createServerFn({
       .toLowerCase();
 
     if (
+      !adminEmail ||
       !loggedInEmail ||
       loggedInEmail !== adminEmail
     ) {
       console.error(
         "[admin] Yetkisiz kullanıcı:",
-        loggedInEmail,
+        loggedInEmail
       );
 
-      throw new Error("Forbidden");
+      throw new Error(
+        "Bu işlem için admin yetkisi gerekiyor."
+      );
     }
+
+    /* ---------------------------------------------
+       Supabase Admin Client
+       --------------------------------------------- */
 
     const { supabaseAdmin } = await import(
       "@/integrations/supabase/client.server"
     );
 
-    // Admin kullanıcısını doğrula
-    const { data: authUser, error: authUserError } =
-      await supabaseAdmin.auth.admin.getUserById(
-        context.userId,
-      );
+    /* ---------------------------------------------
+       Kullanıcının gerçekten var olduğunu kontrol et
+       --------------------------------------------- */
 
-    if (authUserError || !authUser?.user) {
+    const {
+      data: authUser,
+      error: authError,
+    } = await supabaseAdmin.auth.admin.getUserById(
+      context.userId
+    );
+
+    if (
+      authError ||
+      !authUser?.user
+    ) {
       console.error(
-        "[admin] kullanıcı doğrulama hatası:",
-        authUserError,
+        "[admin] kullanıcı bulunamadı:",
+        authError
       );
 
       throw new Error(
-        "Kullanıcı doğrulanamadı",
+        "Kullanıcı doğrulanamadı."
       );
     }
+
+    /* ---------------------------------------------
+       E-posta doğrulaması
+       --------------------------------------------- */
 
     if (!authUser.user.email_confirmed_at) {
       throw new Error(
-        "Admin e-posta adresi doğrulanmamış",
+        "Admin hesabının e-posta adresi doğrulanmamış."
       );
     }
 
-    if (
-      authUser.user.email?.trim().toLowerCase() !==
-      adminEmail
-    ) {
-      throw new Error("Forbidden");
-    }
+    /* ---------------------------------------------
+       Başvuruyu bul
+       --------------------------------------------- */
 
-    // Başvuruyu bul
     const {
       data: existingApplication,
       error: findError,
@@ -308,21 +277,24 @@ export const adminDecideApplication = createServerFn({
     if (findError) {
       console.error(
         "[admin] başvuru arama hatası:",
-        findError,
+        findError
       );
 
       throw new Error(
-        "Başvuru bulunamadı",
+        "Başvuru bulunamadı."
       );
     }
 
     if (!existingApplication) {
       throw new Error(
-        "Başvuru bulunamadı",
+        "Başvuru bulunamadı."
       );
     }
 
-    // Başvuruyu güncelle
+    /* ---------------------------------------------
+       Başvuruyu ONAYLA / REDDET
+       --------------------------------------------- */
+
     const {
       data: application,
       error,
@@ -340,45 +312,26 @@ export const adminDecideApplication = createServerFn({
     if (error || !application) {
       console.error(
         "[admin] başvuru güncelleme hatası:",
-        error,
+        error
       );
 
       throw new Error(
-        "Başvuru güncellenemedi",
+        "Başvuru güncellenemedi."
       );
     }
+
+    /* ---------------------------------------------
+       Log
+       --------------------------------------------- */
 
     console.log(
       `[admin] başvuru ${data.decision}:`,
-      application.id,
+      application.id
     );
 
-    // Karar geçmişine kayıt
-    try {
-      const {
-        error: eventError,
-      } = await supabaseAdmin
-        .from("application_events")
-        .insert({
-          application_id: application.id,
-          actor: "admin",
-          actor_id: context.userId,
-          decision: data.decision,
-          reason: data.note ?? "",
-        });
-
-      if (eventError) {
-        console.error(
-          "[admin] karar geçmişi kaydedilemedi:",
-          eventError,
-        );
-      }
-    } catch (eventError) {
-      console.error(
-        "[admin] karar geçmişi hatası:",
-        eventError,
-      );
-    }
+    /* ---------------------------------------------
+       Başarılı cevap
+       --------------------------------------------- */
 
     return {
       ok: true,
