@@ -161,7 +161,7 @@ export function adminUrlFor(origin: string, applicationId?: string) {
 export async function safeSend(
   applicationId: string,
   kind: string,
-  build: () => ReturnType<typeof adminNewApplicationEmail>,
+  build: () => import("./email.server").AppEmail,
 ) {
   try {
     const result = await sendAppEmail(build());
