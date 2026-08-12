@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
+import { ensureAdminRole } from "@/lib/applications.functions";
 import type { Profile } from "@/lib/types";
 
 export function useMyProfile() {
@@ -84,7 +85,6 @@ export function useIsAdmin() {
     enabled: !!user,
     staleTime: 60_000,
     queryFn: async () => {
-      const { ensureAdminRole } = await import("@/lib/applications.functions");
       try {
         const result = await ensureAdminRole();
         return result.isAdmin;
