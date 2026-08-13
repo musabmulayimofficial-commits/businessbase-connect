@@ -30,6 +30,7 @@ import { Route as AuthenticatedBaglantilarimRouteImport } from './routes/_authen
 import { Route as AuthenticatedBildirimlerRouteImport } from './routes/_authenticated/bildirimler'
 import { Route as AuthenticatedMesajlarRouteImport } from './routes/_authenticated/mesajlar'
 import { Route as AuthenticatedProfilimRouteImport } from './routes/_authenticated/profilim'
+import { Route as BasvuruKararTokenRouteImport } from './routes/basvuru-karar.$token'
 import { Route as ProfilIdRouteImport } from './routes/profil.$id'
 
 const IndexRoute = IndexRouteImport.update({
@@ -138,6 +139,11 @@ const AuthenticatedProfilimRoute = AuthenticatedProfilimRouteImport.update({
   path: '/profilim',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const BasvuruKararTokenRoute = BasvuruKararTokenRouteImport.update({
+  id: '/basvuru-karar/$token',
+  path: '/basvuru-karar/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProfilIdRoute = ProfilIdRouteImport.update({
   id: '/profil/$id',
   path: '/profil/$id',
@@ -165,6 +171,7 @@ export interface FileRoutesByFullPath {
   '/bildirimler': typeof AuthenticatedBildirimlerRoute
   '/mesajlar': typeof AuthenticatedMesajlarRoute
   '/profilim': typeof AuthenticatedProfilimRoute
+  '/basvuru-karar/$token': typeof BasvuruKararTokenRoute
   '/profil/$id': typeof ProfilIdRoute
 }
 export interface FileRoutesByTo {
@@ -188,6 +195,7 @@ export interface FileRoutesByTo {
   '/bildirimler': typeof AuthenticatedBildirimlerRoute
   '/mesajlar': typeof AuthenticatedMesajlarRoute
   '/profilim': typeof AuthenticatedProfilimRoute
+  '/basvuru-karar/$token': typeof BasvuruKararTokenRoute
   '/profil/$id': typeof ProfilIdRoute
 }
 export interface FileRoutesById {
@@ -213,6 +221,7 @@ export interface FileRoutesById {
   '/_authenticated/bildirimler': typeof AuthenticatedBildirimlerRoute
   '/_authenticated/mesajlar': typeof AuthenticatedMesajlarRoute
   '/_authenticated/profilim': typeof AuthenticatedProfilimRoute
+  '/basvuru-karar/$token': typeof BasvuruKararTokenRoute
   '/profil/$id': typeof ProfilIdRoute
 }
 export interface FileRouteTypes {
@@ -238,6 +247,7 @@ export interface FileRouteTypes {
     | '/bildirimler'
     | '/mesajlar'
     | '/profilim'
+    | '/basvuru-karar/$token'
     | '/profil/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -261,6 +271,7 @@ export interface FileRouteTypes {
     | '/bildirimler'
     | '/mesajlar'
     | '/profilim'
+    | '/basvuru-karar/$token'
     | '/profil/$id'
   id:
     | '__root__'
@@ -285,6 +296,7 @@ export interface FileRouteTypes {
     | '/_authenticated/bildirimler'
     | '/_authenticated/mesajlar'
     | '/_authenticated/profilim'
+    | '/basvuru-karar/$token'
     | '/profil/$id'
   fileRoutesById: FileRoutesById
 }
@@ -303,6 +315,7 @@ export interface RootRouteChildren {
   SifreSifirlaRoute: typeof SifreSifirlaRoute
   SifremiUnuttumRoute: typeof SifremiUnuttumRoute
   ToplulukKurallariRoute: typeof ToplulukKurallariRoute
+  BasvuruKararTokenRoute: typeof BasvuruKararTokenRoute
   ProfilIdRoute: typeof ProfilIdRoute
 }
 
@@ -455,6 +468,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedProfilimRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/basvuru-karar/$token': {
+      id: '/basvuru-karar/$token'
+      path: '/basvuru-karar/$token'
+      fullPath: '/basvuru-karar/$token'
+      preLoaderRoute: typeof BasvuruKararTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/profil/$id': {
       id: '/profil/$id'
       path: '/profil/$id'
@@ -503,6 +523,7 @@ const rootRouteChildren: RootRouteChildren = {
   SifreSifirlaRoute: SifreSifirlaRoute,
   SifremiUnuttumRoute: SifremiUnuttumRoute,
   ToplulukKurallariRoute: ToplulukKurallariRoute,
+  BasvuruKararTokenRoute: BasvuruKararTokenRoute,
   ProfilIdRoute: ProfilIdRoute,
 }
 export const routeTree = rootRouteImport

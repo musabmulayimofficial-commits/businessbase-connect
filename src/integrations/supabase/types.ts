@@ -14,11 +14,49 @@ export type Database = {
   }
   public: {
     Tables: {
+      application_decision_tokens: {
+        Row: {
+          application_id: number
+          consumed_at: string | null
+          created_at: string
+          decision: string
+          expires_at: string
+          id: string
+          token_hash: string
+        }
+        Insert: {
+          application_id: number
+          consumed_at?: string | null
+          created_at?: string
+          decision: string
+          expires_at: string
+          id?: string
+          token_hash: string
+        }
+        Update: {
+          application_id?: number
+          consumed_at?: string | null
+          created_at?: string
+          decision?: string
+          expires_at?: string
+          id?: string
+          token_hash?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "application_decision_tokens_application_id_fkey"
+            columns: ["application_id"]
+            isOneToOne: false
+            referencedRelation: "applications"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       application_events: {
         Row: {
           actor: string
           actor_id: string | null
-          application_id: string
+          application_id: number
           created_at: string
           decision: string
           id: string
@@ -28,7 +66,7 @@ export type Database = {
         Insert: {
           actor?: string
           actor_id?: string | null
-          application_id: string
+          application_id: number
           created_at?: string
           decision: string
           id?: string
@@ -38,7 +76,7 @@ export type Database = {
         Update: {
           actor?: string
           actor_id?: string | null
-          application_id?: string
+          application_id?: number
           created_at?: string
           decision?: string
           id?: string
@@ -65,7 +103,7 @@ export type Database = {
           email: string
           entrepreneurship_status: string
           full_name: string
-          id: string
+          id: number
           phone: string
           profession: string
           reason: string
@@ -84,7 +122,7 @@ export type Database = {
           email: string
           entrepreneurship_status: string
           full_name: string
-          id?: string
+          id?: number
           phone: string
           profession: string
           reason: string
@@ -103,7 +141,7 @@ export type Database = {
           email?: string
           entrepreneurship_status?: string
           full_name?: string
-          id?: string
+          id?: number
           phone?: string
           profession?: string
           reason?: string
@@ -529,6 +567,16 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      consume_application_decision_token: {
+        Args: { token: string }
+        Returns: {
+          application_id: number
+          decision: string
+          email: string
+          full_name: string
+          status: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]

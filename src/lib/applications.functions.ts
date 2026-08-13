@@ -25,7 +25,7 @@ const applicationSchema = z.object({
    ========================================================= */
 
 const decisionSchema = z.object({
-  id: z.string().uuid(),
+  id: z.coerce.number().int().positive(),
   decision: z.enum(["approved", "rejected"]),
   note: z.string().trim().max(500).optional(),
 });
@@ -126,6 +126,23 @@ export const submitApplication = createServerFn({
       "[application] yeni başvuru:",
       application.id
     );
+
+    try {
+      const { applicationOrigin, createApplicationDecisionTokens, decisionUrl, emails, safeSend } = await import("@/lib/applications.server");
+      const adminEmail = process.env["ADMIN_EMAIL"]?.trim();
+      if (!adminEmail) throw new Error("ADMIN_EMAIL environment variable is required.");
+      applicationOrigin();
+      const tokens = await createApplicationDecisionTokens(application.id);
+      await safeSend(application.id, "admin_new_application", () =>
+        emails.adminNewApplicationEmail(adminEmail, application, {
+          approve: decisionUrl(tokens.approve),
+          reject: decisionUrl(tokens.reject),
+        }),
+      );
+    } catch (emailError) {
+      // The application is already stored; a retry must not create a duplicate record.
+      console.error("[application] admin email preparation failed:", emailError);
+    }
 
     return {
       ok: true,
@@ -332,6 +349,9 @@ export const adminDecideApplication = createServerFn({
     /* ---------------------------------------------
        Başarılı cevap
        --------------------------------------------- */
+
+    const { sendDecisionEmail } = await import("@/lib/applications.server");
+    await sendDecisionEmail(application, data.decision);
 
     return {
       ok: true,

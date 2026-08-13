@@ -89,7 +89,7 @@ function escapeAttr(value: string) {
 }
 
 export interface ApplicationSummary {
-  id: string;
+  id: number;
   full_name: string;
   email: string;
   phone: string;
@@ -138,7 +138,7 @@ function detailRows(app: ApplicationSummary) {
 export function adminNewApplicationEmail(
   to: string,
   app: ApplicationSummary,
-  adminUrl: string,
+  decisionUrls: { approve: string; reject: string },
 ): AppEmail {
   const ai =
     app.ai_decision == null
@@ -160,11 +160,12 @@ export function adminNewApplicationEmail(
     subject: "Yeni BusinessBase üyelik başvurusu",
     html: layout(
       "Yeni bir üyelik başvurusu geldi",
-      `${detailRows(app)}${ai}`,
-      {
-        label: "Başvuruyu incele",
-        url: adminUrl,
-      },
+      `${detailRows(app)}${ai}
+      <div style="margin:28px 0 8px">
+        <a href="${escapeAttr(decisionUrls.approve)}" style="display:inline-block;background:#15803d;color:#fff;text-decoration:none;padding:12px 22px;border-radius:8px;font-size:14px;font-weight:600">ONAYLA</a>
+        <a href="${escapeAttr(decisionUrls.reject)}" style="display:inline-block;background:#b91c1c;color:#fff;text-decoration:none;padding:12px 22px;border-radius:8px;font-size:14px;font-weight:600;margin-left:8px">REDDET</a>
+      </div>
+      <p style="margin:16px 0 0;color:${BRAND.muted};font-size:12px">Bu bağlantılar tek kullanımlıktır ve 72 saat sonra geçersiz olur.</p>`,
     ),
   };
 }
@@ -292,15 +293,16 @@ export async function sendAppEmail(
   email: AppEmail,
 ): Promise<SendResult> {
   const apiKey = process.env["RESEND_API_KEY"];
+  const from = process.env["RESEND_FROM_EMAIL"]?.trim();
 
-  if (!apiKey) {
+  if (!apiKey || !from) {
     console.warn(
       `[email] RESEND_API_KEY bulunamadı: ${email.subject} -> ${email.to}`,
     );
 
     return {
       sent: false,
-      reason: "resend_api_key_missing",
+      reason: !apiKey ? "resend_api_key_missing" : "resend_from_email_missing",
     };
   }
 
@@ -316,7 +318,7 @@ export async function sendAppEmail(
         },
 
         body: JSON.stringify({
-          from: "BusinessBase <onboarding@resend.dev>",
+          from,
           to: [email.to],
           subject: email.subject,
           html: email.html,

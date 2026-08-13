@@ -18,6 +18,51 @@ export interface AiReview {
   reason: string;
 }
 
+export type ApplicationDecision = "approved" | "rejected";
+
+export function applicationOrigin(): string {
+  const origin = process.env["APP_ORIGIN"]?.trim();
+  if (!origin) throw new Error("APP_ORIGIN environment variable is required.");
+  return origin.replace(/\/$/, "");
+}
+
+export function decisionUrl(token: string): string {
+  return `${applicationOrigin()}/basvuru-karar/${encodeURIComponent(token)}`;
+}
+
+/** Generates 256 bits of entropy; only its SHA-256 digest is persisted. */
+export async function createDecisionToken(): Promise<{ token: string; tokenHash: string }> {
+  const bytes = new Uint8Array(32);
+  crypto.getRandomValues(bytes);
+  const token = Array.from(bytes, (byte) => byte.toString(16).padStart(2, "0")).join("");
+  const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(token));
+  const tokenHash = Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, "0")).join("");
+  return { token, tokenHash };
+}
+
+export async function createApplicationDecisionTokens(applicationId: number) {
+  const [approve, reject] = await Promise.all([createDecisionToken(), createDecisionToken()]);
+  const expiresAt = new Date(Date.now() + 72 * 60 * 60 * 1000).toISOString();
+  const { error } = await supabaseAdmin.from("application_decision_tokens").insert([
+    { application_id: applicationId, decision: "approved", token_hash: approve.tokenHash, expires_at: expiresAt },
+    { application_id: applicationId, decision: "rejected", token_hash: reject.tokenHash, expires_at: expiresAt },
+  ]);
+  if (error) throw new Error(`Decision tokens could not be created: ${error.message}`);
+  return { approve: approve.token, reject: reject.token };
+}
+
+export async function sendDecisionEmail(
+  application: Pick<ApplicationSummary, "id" | "email" | "full_name">,
+  decision: ApplicationDecision,
+) {
+  const joinUrl = `${applicationOrigin()}/kayit-ol`;
+  await safeSend(application.id, `applicant_${decision}`, () =>
+    decision === "approved"
+      ? applicantApprovedEmail(application.email, application.full_name, joinUrl)
+      : applicantRejectedEmail(application.email, application.full_name),
+  );
+}
+
 const SYSTEM_PROMPT = `Sen BusinessBase adlı Türk girişimci networkünün üyelik başvurularını değerlendiren bir inceleme asistanısın.
 Başvuruyu şu kriterlerle değerlendir:
 - girişimcilik ilgisi
@@ -135,7 +180,7 @@ export function statusFromDecision(decision: AiDecision) {
 }
 
 export async function logApplicationEvent(input: {
-  application_id: string;
+  application_id: number;
   actor: string;
   actor_id?: string | null;
   decision: string;
@@ -159,7 +204,7 @@ export function adminUrlFor(origin: string, applicationId?: string) {
 
 /** Hiçbir e-posta hatası başvuru akışını durdurmaz. */
 export async function safeSend(
-  applicationId: string,
+  applicationId: number,
   kind: string,
   build: () => import("./email.server").AppEmail,
 ) {

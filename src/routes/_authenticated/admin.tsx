@@ -147,7 +147,7 @@ function ApplicationsTab() {
   });
 
   const mutation = useMutation({
-    mutationFn: (input: { id: string; decision: "approved" | "rejected" }) =>
+    mutationFn: (input: { id: number; decision: "approved" | "rejected" }) =>
       decide({ data: input }),
     onSuccess: (_, input) => {
       toast.success(input.decision === "approved" ? "Başvuru onaylandı" : "Başvuru reddedildi");
