@@ -3,21 +3,52 @@ import { ArrowRight, Handshake, Lightbulb, Compass, Users } from "lucide-react";
 import { PublicLayout } from "@/components/PublicLayout";
 import { GlassButton, GlassPanel } from "@/components/ui/glass";
 
+const SITE_URL = "https://www.businessbase.com.tr/";
+const SITE_TITLE = "BusinessBase | Türkiye'nin Girişimcilik Ağı";
+const SITE_DESCRIPTION =
+  "BusinessBase, girişimciler, işletmeler ve projeler için yeni nesil networking ağıdır. Profilini oluştur, bağlantılarını keşfet ve girişimcilik ağının bir parçası ol.";
+
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "BusinessBase — Girişimcilerin birbirini bulduğu network" },
+      { title: SITE_TITLE },
       {
         name: "description",
-        content:
-          "Fikirlerini paylaş, doğru insanlarla tanış, iş ortaklıkları kur. BusinessBase girişimci networküne katıl.",
+        content: SITE_DESCRIPTION,
       },
-      { property: "og:title", content: "BusinessBase — Girişimci Networkü" },
+      { property: "og:title", content: SITE_TITLE },
       {
         property: "og:description",
-        content: "Fikirlerini paylaş. Doğru insanlarla tanış. İş ortaklıkları kur.",
+        content: "Girişimciler, işletmeler ve projeler için yeni nesil networking ağı.",
+      },
+      { property: "og:url", content: SITE_URL },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+      { name: "twitter:title", content: SITE_TITLE },
+      {
+        name: "twitter:description",
+        content: "Girişimciler, işletmeler ve projeler için yeni nesil networking ağı.",
+      },
+      { name: "twitter:url", content: SITE_URL },
+      {
+        "script:ld+json": {
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "Organization",
+              name: "BusinessBase",
+              url: SITE_URL,
+            },
+            {
+              "@type": "WebSite",
+              name: "BusinessBase",
+              url: SITE_URL,
+            },
+          ],
+        },
       },
     ],
+    links: [{ rel: "canonical", href: SITE_URL }],
   }),
   component: Home,
 });
