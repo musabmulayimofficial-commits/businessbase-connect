@@ -9,8 +9,10 @@ export const Route = createFileRoute("/basvuru-karar/$token")({
         }
 
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+        const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(params.token));
+        const tokenHash = Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, "0")).join("");
         const { data, error } = await supabaseAdmin.rpc("consume_application_decision_token", {
-          token: params.token,
+          p_token_hash: tokenHash,
         });
 
         if (error) {

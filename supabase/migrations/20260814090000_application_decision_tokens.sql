@@ -20,7 +20,7 @@ GRANT ALL ON public.application_decision_tokens TO service_role;
 
 -- Atomically validates, consumes and applies an email decision.  A consumed or
 -- expired token returns no rows, so callers cannot make a second decision.
-CREATE OR REPLACE FUNCTION public.consume_application_decision_token(token text)
+CREATE OR REPLACE FUNCTION public.consume_application_decision_token(p_token_hash text)
 RETURNS TABLE (
   application_id bigint,
   decision text,
@@ -38,7 +38,7 @@ DECLARE
 BEGIN
   SELECT * INTO matched_token
   FROM public.application_decision_tokens
-  WHERE token_hash = encode(digest(token, 'sha256'), 'hex')
+  WHERE token_hash = p_token_hash
     AND consumed_at IS NULL
     AND expires_at > now()
   FOR UPDATE;

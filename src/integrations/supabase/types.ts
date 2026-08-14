@@ -568,7 +568,7 @@ export type Database = {
     }
     Functions: {
       consume_application_decision_token: {
-        Args: { token: string }
+        Args: { p_token_hash: string }
         Returns: {
           application_id: number
           decision: string
